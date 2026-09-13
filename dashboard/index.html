@@ -6,7 +6,7 @@
 <title>Cash-Flow Ledger — Repayment Decision Engine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   :root{
     --paper:#EAE7DC;
@@ -349,7 +349,17 @@
   Currency shown as Rs. (illustrative units). This is a decision-support prototype, not a credit score,
   not a regulated underwriting system, and not a replacement for human lender judgment.
 </footer>
-
+<div class="sim-overlay" id="simOverlay">
+  <div class="sim-modal">
+    <h2>Run Decision Simulation</h2>
+    <div class="sim-sub" id="simSub"></div>
+    <div id="simSteps"></div>
+    <div class="sim-footer">
+      <button id="simCloseBtn">Close</button>
+      <button id="simReplayBtn" class="primary" style="display:none;">Replay</button>
+    </div>
+  </div>
+</div>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>

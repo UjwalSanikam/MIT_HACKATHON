@@ -35,6 +35,13 @@ function meta(condition) {
 function destroyChart(key) {
   if (charts[key]) { charts[key].destroy(); charts[key] = null; }
 }
+function safeDraw(fn) {
+  try {
+    fn();
+  } catch (err) {
+    console.error('Chart failed to render:', err);
+  }
+}
 
 // ============================================================
 // TOP-LEVEL TABS
@@ -96,6 +103,10 @@ function renderPortfolioPage() {
         <h3>Risk score distribution</h3>
         <div class="chart-wrap short"><canvas id="riskDistChart"></canvas></div>
       </div>
+      <div class="panel" style="flex:1;min-width:280px;">
+        <h3>Repayment stress distribution</h3>
+        <div class="chart-wrap short"><canvas id="stressDistChart"></canvas></div>
+      </div>
     </div>
 
     <h2 style="font-size:1.05rem;margin-bottom:10px;">Borrowers</h2>
@@ -105,10 +116,13 @@ function renderPortfolioPage() {
     </div>
   `;
 
-  drawConditionChart(borrowers);
-  drawRiskDistChart(borrowers);
+  // Render the table/filters first so a chart failure (e.g. Chart.js
+  // not loaded) can never take the borrower table down with it.
   renderFilterChips();
   renderPortfolioTable();
+  safeDraw(() => drawConditionChart(borrowers));
+  safeDraw(() => drawRiskDistChart(borrowers));
+  safeDraw(() => drawStressDistChart(borrowers));
 }
 
 function renderFilterChips() {
@@ -154,7 +168,10 @@ function renderPortfolioTable() {
     { key: 'risk_score', label: 'Risk' },
     { key: 'condition', label: 'Condition' },
     { key: 'current_plan', label: 'Current Plan', get: b => b.loan.installment },
-    { key: 'recommended_action', label: 'Recommended Action' },
+    {
+      key: 'recommended_plan', label: 'Recommended Plan',
+      get: b => b.scenarios.strategies[b.scenarios.optimizer_pick].avg_payment,
+    },
   ];
   let rows = filteredBorrowers();
   const sortKey = state.portfolioSort.key, dir = state.portfolioSort.dir === 'asc' ? 1 : -1;
@@ -180,7 +197,12 @@ function renderPortfolioTable() {
           <td>${b.risk_score}</td>
           <td style="text-align:left;">${m.label}</td>
           <td>Rs.${fmt(b.loan.installment)}/mo</td>
-          <td style="text-align:left;">${b.intervention.title}</td>
+          <td style="text-align:left;">${(() => {
+            const pickKey = b.scenarios.optimizer_pick;
+            const pick = b.scenarios.strategies[pickKey];
+            if (pickKey === 'fixed') return `Keep current plan`;
+            return `${pick.label} · Rs.${fmt(pick.avg_payment)}/mo avg`;
+          })()}</td>
         </tr>`;
       }).join('')}
     </tbody>
@@ -238,6 +260,26 @@ function drawRiskDistChart(borrowers) {
   });
 }
 
+function drawStressDistChart(borrowers) {
+  destroyChart('stressDist');
+  const bandOrder = ['Very Low', 'Low', 'Moderate', 'High', 'Severe'];
+  const bandColor = { 'Very Low': '#2E6B4F', 'Low': '#4C8C6B', 'Moderate': '#B08226', 'High': '#C77B3C', 'Severe': '#9C4A3C' };
+  const counts = Object.fromEntries(bandOrder.map(b => [b, 0]));
+  borrowers.forEach(b => { counts[b.repayment_stress_index.band] = (counts[b.repayment_stress_index.band] || 0) + 1; });
+  charts.stressDist = new Chart(document.getElementById('stressDistChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: bandOrder,
+      datasets: [{ label: 'Borrowers', data: bandOrder.map(b => counts[b]), backgroundColor: bandOrder.map(b => bandColor[b]), borderRadius: 3 }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } },
+    },
+  });
+}
+
 // ============================================================
 // BORROWER LIST + DETAIL PAGE
 // ============================================================
@@ -278,6 +320,7 @@ function renderMain() {
       <h2 style="font-size:1.35rem;">${b.name}</h2>
       <span class="stamp" style="color:${m.color};">${m.label}</span>
       <span class="chip">Confidence ${b.classification_confidence}%</span>
+      <button id="runSimBtn" class="filter-chip" style="margin-left:auto;">▶ Run Decision Simulation</button>
     </div>
     <div class="borrower-sub">Loan: Rs.${fmt(b.loan.principal)} principal · Rs.${fmt(b.loan.installment)}/month · ${b.loan.tenure_months} month tenure</div>
 
@@ -307,6 +350,7 @@ function renderMain() {
   main.querySelectorAll('.view-toggle button').forEach(btn => {
     btn.addEventListener('click', () => { state.view = btn.dataset.view; renderMain(); });
   });
+  document.getElementById('runSimBtn').addEventListener('click', () => runDecisionSimulation(b));
   main.querySelectorAll('.subtabs button').forEach(btn => {
     btn.addEventListener('click', () => { state.detailTab = btn.dataset.subtab; renderDetailContent(); });
   });
@@ -854,6 +898,13 @@ function renderMethodologyPage() {
   `;
 }
 
+function runDecisionSimulation(b) {
+  document.getElementById('simOverlay').classList.add('open');
+  document.getElementById('simSub').textContent = `Placeholder — full step sequence coming next.`;
+  document.getElementById('simCloseBtn').addEventListener('click', () => {
+    document.getElementById('simOverlay').classList.remove('open');
+  }, { once: true });
+}
 
 // ============================================================
 // BOOTSTRAP
