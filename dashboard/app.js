@@ -743,3 +743,124 @@ function wireWhatIf(b) {
   [sliderPct, sliderBuffer, sliderMin, sliderMax].forEach(s => s.addEventListener('input', recompute));
   recompute();
 }
+
+// ============================================================
+// EVIDENCE & WARNINGS TAB
+// ============================================================
+function evidenceHTML(b) {
+  const evidenceItems = b.evidence_chain.map(line => `<li>${line}</li>`).join('');
+
+  const cn = b.comparison_narrative;
+  const narrativeBlock = cn.current_plan_fails ? `
+    <div class="callout">
+      <strong>Why not the current plan?</strong><br/>${cn.headline}
+    </div>` : `<div class="callout"><strong>${cn.headline}</strong></div>`;
+
+  const severityRank = { HIGH: 0, MEDIUM: 1, INFO: 2, GOOD: 3 };
+  const warnings = [...b.warnings].sort((a, c) => (severityRank[a.severity] ?? 9) - (severityRank[c.severity] ?? 9));
+  const warningCards = warnings.length ? warnings.map(w => `
+    <div class="warning-card">
+      <div class="sev sev-${w.severity}">${w.severity}</div>
+      <div>
+        <div class="msg">${w.message}</div>
+        <div class="ev">${w.evidence}</div>
+        <div class="act">${w.action}</div>
+      </div>
+    </div>`).join('') : `<p style="font-size:0.85rem;color:var(--ink-soft);">No active warning signals for this borrower.</p>`;
+
+  return `
+    <section>
+      <h2>Why did the system reach this conclusion?</h2>
+      <div class="panel">
+        <div style="margin-bottom:10px;">
+          <span class="badge-inline">Condition: ${meta(b.condition).label}</span>
+          <span class="badge-inline">Confidence: ${b.classification_confidence}%</span>
+        </div>
+        <ol class="evidence-list">${evidenceItems}</ol>
+      </div>
+    </section>
+
+    <section>${narrativeBlock}</section>
+
+    <section>
+      <h2>Early warning signals</h2>
+      ${warningCards}
+    </section>
+  `;
+}
+
+// ============================================================
+// METHODOLOGY PAGE
+// ============================================================
+function renderMethodologyPage() {
+  const v = REPORT_DATA.validation;
+  const meta = REPORT_DATA.meta;
+  const weights = REPORT_DATA.borrowers[0].scenarios.weights;
+
+  document.getElementById('methodologyPage').innerHTML = `
+    <h2 style="font-size:1.3rem;margin-bottom:16px;">Methodology</h2>
+
+    <div class="method-section">
+      <h3>What this system is</h3>
+      <p>An explainable decision-support system for cash-flow-aware microloan repayment planning.
+      It is a hackathon prototype - not a regulated credit-scoring system, not a guaranteed repayment
+      predictor, and not a replacement for human lender judgment. Every score and recommendation traces
+      back to a statistic computed directly from the borrower's own income/expense history.</p>
+    </div>
+
+    <div class="method-section">
+      <h3>Pipeline</h3>
+      <p>
+        <span class="badge-inline">Financial history</span> →
+        <span class="badge-inline">Cash-flow analysis</span> →
+        <span class="badge-inline">Seasonality &amp; trend</span> →
+        <span class="badge-inline">Stress detection</span> →
+        <span class="badge-inline">Condition classification</span> →
+        <span class="badge-inline">Forecast</span> →
+        <span class="badge-inline">Scenario simulation</span> →
+        <span class="badge-inline">Optimizer pick</span> →
+        <span class="badge-inline">Evidence &amp; warnings</span>
+      </p>
+    </div>
+
+    <div class="method-section">
+      <h3>Model validation</h3>
+      <div class="kpi-grid" style="margin-bottom:0;">
+        <div class="kpi-card"><div class="num figure">${v.classifier_accuracy_pct}%</div><div class="label">CLASSIFIER ACCURACY (SYNTHETIC GROUND TRUTH)</div></div>
+        <div class="kpi-card"><div class="num figure">${v.classifier_rows.length}</div><div class="label">BORROWERS EVALUATED</div></div>
+        <div class="kpi-card"><div class="num figure">Rs.${fmt(v.forecast_income_mae)}</div><div class="label">FORECAST INCOME MAE (${v.holdout_months}-MONTH HOLDOUT)</div></div>
+        <div class="kpi-card"><div class="num figure">Rs.${fmt(v.forecast_netcf_mae)}</div><div class="label">FORECAST NET-CASH-FLOW MAE</div></div>
+      </div>
+      <p style="margin-top:14px;">Classifier accuracy is checked against a synthetic ground-truth label set at
+      data-generation time (never seen by the classifier itself). The forecast backtest holds out each
+      borrower's last ${v.holdout_months} months, forecasts them blind, and compares against the real values.</p>
+    </div>
+
+    <div class="method-section">
+      <h3>Key parameters (configurable in code)</h3>
+      <p>
+        <span class="badge-inline">Safety buffer: ${meta.safety_buffer_pct}% of net cash flow</span>
+        <span class="badge-inline">Forecast horizon: ${meta.forecast_months} months</span>
+        <span class="badge-inline">Optimizer weights: ${weights.sustainability}×sustainability + ${weights.recovery}×recovery + ${weights.stability}×stability</span>
+      </p>
+    </div>
+
+    <div class="method-section">
+      <h3>Limitations</h3>
+      <p>All figures are generated from a synthetic 24-month income/expense simulation for demonstration
+      purposes. Confidence scores are prototype heuristics, not statistical p-values. Recommendations are
+      evidence-based and reviewable, but are meant to support - not replace - a human lender's judgment.</p>
+    </div>
+  `;
+}
+
+
+// ============================================================
+// BOOTSTRAP
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderTopStrip();
+  initTabs();
+  renderBorrowerList();
+  renderPortfolioPage(); // Portfolio is the default active tab
+});
