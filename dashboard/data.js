@@ -724,7 +724,7 @@ const REPORT_DATA = {
           "scheduled": 5500,
           "actual": 5500,
           "status": "on_time",
-          "days_late": 0
+          "days_late": 2
         },
         {
           "month": 10,
@@ -829,7 +829,7 @@ const REPORT_DATA = {
         "on_time_rate": 100.0,
         "missed_count": 0,
         "partial_count": 0,
-        "avg_delay_days": 0.0
+        "avg_delay_days": 2
       },
       "ml_check": {
         "id": "B01",
@@ -857,7 +857,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": 0.1,
             "cohort_avg": 0.258
           }
@@ -1587,9 +1587,9 @@ const REPORT_DATA = {
         {
           "month": 1,
           "scheduled": 6250,
-          "actual": 3305.35,
+          "actual": 3899.75,
           "status": "partial",
-          "days_late": 12
+          "days_late": 18
         },
         {
           "month": 2,
@@ -1622,9 +1622,9 @@ const REPORT_DATA = {
         {
           "month": 6,
           "scheduled": 6250,
-          "actual": 2334.26,
+          "actual": 2525.24,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 7,
@@ -1664,14 +1664,14 @@ const REPORT_DATA = {
         {
           "month": 12,
           "scheduled": 6250,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 2242.18,
+          "status": "partial",
+          "days_late": 18
         },
         {
           "month": 13,
           "scheduled": 6250,
-          "actual": 2744.98,
+          "actual": 2539.46,
           "status": "partial",
           "days_late": 12
         },
@@ -1706,16 +1706,16 @@ const REPORT_DATA = {
         {
           "month": 18,
           "scheduled": 6250,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 2893.02,
+          "status": "partial",
+          "days_late": 7
         },
         {
           "month": 19,
           "scheduled": 6250,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 3985.77,
+          "status": "partial",
+          "days_late": 7
         },
         {
           "month": 20,
@@ -1748,9 +1748,9 @@ const REPORT_DATA = {
       ],
       "repayment_history_summary": {
         "on_time_rate": 66.7,
-        "missed_count": 5,
-        "partial_count": 3,
-        "avg_delay_days": 10.3
+        "missed_count": 2,
+        "partial_count": 6,
+        "avg_delay_days": 12.3
       },
       "ml_check": {
         "id": "B02",
@@ -1758,10 +1758,10 @@ const REPORT_DATA = {
         "rule_condition": "seasonal_pattern",
         "rule_risk_score": 42.3,
         "ml_condition": "seasonal_pattern",
-        "ml_condition_confidence_pct": 93.3,
+        "ml_condition_confidence_pct": 92.6,
         "ml_agrees_with_rule_engine": true,
         "ml_matches_expected_archetype_validation_only": true,
-        "ml_avg_predicted_risk_pct": 32.7,
+        "ml_avg_predicted_risk_pct": 33.3,
         "actual_stress_month_rate_pct": 33.3,
         "condition_top_drivers": [
           {
@@ -1778,7 +1778,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": 0.96,
             "cohort_avg": 0.258
           }
@@ -2511,9 +2511,9 @@ const REPORT_DATA = {
         {
           "month": 4,
           "scheduled": 4200,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 1879.41,
+          "status": "partial",
+          "days_late": 12
         },
         {
           "month": 5,
@@ -2532,16 +2532,16 @@ const REPORT_DATA = {
         {
           "month": 7,
           "scheduled": 4200,
-          "actual": 2578.82,
+          "actual": 3493.34,
           "status": "partial",
-          "days_late": 10
+          "days_late": 3
         },
         {
           "month": 8,
           "scheduled": 4200,
-          "actual": 2438.46,
-          "status": "partial",
-          "days_late": 18
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 9,
@@ -2553,23 +2553,23 @@ const REPORT_DATA = {
         {
           "month": 10,
           "scheduled": 4200,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 1847.36,
+          "status": "partial",
+          "days_late": 7
         },
         {
           "month": 11,
           "scheduled": 4200,
           "actual": 4200,
           "status": "on_time",
-          "days_late": 2
+          "days_late": 0
         },
         {
           "month": 12,
           "scheduled": 4200,
           "actual": 4200,
           "status": "on_time",
-          "days_late": 0
+          "days_late": 2
         },
         {
           "month": 13,
@@ -2588,9 +2588,9 @@ const REPORT_DATA = {
         {
           "month": 15,
           "scheduled": 4200,
-          "actual": 2773.68,
+          "actual": 1356.42,
           "status": "partial",
-          "days_late": 18
+          "days_late": 7
         },
         {
           "month": 16,
@@ -2623,9 +2623,9 @@ const REPORT_DATA = {
         {
           "month": 20,
           "scheduled": 4200,
-          "actual": 1760.57,
+          "actual": 1972.33,
           "status": "partial",
-          "days_late": 7
+          "days_late": 18
         },
         {
           "month": 21,
@@ -2644,16 +2644,16 @@ const REPORT_DATA = {
         {
           "month": 23,
           "scheduled": 4200,
-          "actual": 1324.97,
-          "status": "partial",
-          "days_late": 7
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         }
       ],
       "repayment_history_summary": {
         "on_time_rate": 66.7,
         "missed_count": 3,
         "partial_count": 5,
-        "avg_delay_days": 10.3
+        "avg_delay_days": 8.2
       },
       "ml_check": {
         "id": "B03",
@@ -2661,10 +2661,10 @@ const REPORT_DATA = {
         "rule_condition": "recovering",
         "rule_risk_score": 32.5,
         "ml_condition": "chronic_strain",
-        "ml_condition_confidence_pct": 45.6,
+        "ml_condition_confidence_pct": 46.0,
         "ml_agrees_with_rule_engine": false,
         "ml_matches_expected_archetype_validation_only": true,
-        "ml_avg_predicted_risk_pct": 38.0,
+        "ml_avg_predicted_risk_pct": 38.4,
         "actual_stress_month_rate_pct": 33.3,
         "condition_top_drivers": [
           {
@@ -2681,7 +2681,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": 0.03,
             "cohort_avg": 0.258
           }
@@ -3444,16 +3444,16 @@ const REPORT_DATA = {
         {
           "month": 14,
           "scheduled": 5200,
-          "actual": 2269.94,
-          "status": "partial",
-          "days_late": 12
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 15,
           "scheduled": 5200,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 2011.41,
+          "status": "partial",
+          "days_late": 7
         },
         {
           "month": 16,
@@ -3516,7 +3516,7 @@ const REPORT_DATA = {
         "on_time_rate": 87.5,
         "missed_count": 2,
         "partial_count": 1,
-        "avg_delay_days": 12
+        "avg_delay_days": 7
       },
       "ml_check": {
         "id": "B04",
@@ -3524,10 +3524,10 @@ const REPORT_DATA = {
         "rule_condition": "temporary_stress",
         "rule_risk_score": 43.8,
         "ml_condition": "temporary_stress",
-        "ml_condition_confidence_pct": 53.6,
+        "ml_condition_confidence_pct": 52.4,
         "ml_agrees_with_rule_engine": true,
         "ml_matches_expected_archetype_validation_only": true,
-        "ml_avg_predicted_risk_pct": 15.3,
+        "ml_avg_predicted_risk_pct": 14.8,
         "actual_stress_month_rate_pct": 12.5,
         "condition_top_drivers": [
           {
@@ -3544,7 +3544,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": 0.12,
             "cohort_avg": 0.258
           }
@@ -4132,7 +4132,7 @@ const REPORT_DATA = {
         }
       },
       "financial_health": {
-        "score": 40.0,
+        "score": 40.1,
         "breakdown": {
           "cash_flow_stability": 58.9,
           "repayment_coverage": 52.7,
@@ -4382,56 +4382,56 @@ const REPORT_DATA = {
           "scheduled": 6100,
           "actual": 6100,
           "status": "on_time",
-          "days_late": 2
+          "days_late": 0
         },
         {
           "month": 16,
           "scheduled": 6100,
-          "actual": 2679.21,
+          "actual": 4127.33,
           "status": "partial",
           "days_late": 12
         },
         {
           "month": 17,
           "scheduled": 6100,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 3741.09,
+          "status": "partial",
+          "days_late": 18
         },
         {
           "month": 18,
           "scheduled": 6100,
-          "actual": 3155.41,
-          "status": "partial",
-          "days_late": 12
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 19,
+          "scheduled": 6100,
+          "actual": 4075.41,
+          "status": "partial",
+          "days_late": 7
+        },
+        {
+          "month": 20,
           "scheduled": 6100,
           "actual": 0.0,
           "status": "missed",
           "days_late": 0
         },
         {
-          "month": 20,
-          "scheduled": 6100,
-          "actual": 3354.71,
-          "status": "partial",
-          "days_late": 18
-        },
-        {
           "month": 21,
           "scheduled": 6100,
-          "actual": 3287.71,
+          "actual": 3627.22,
           "status": "partial",
-          "days_late": 18
+          "days_late": 12
         },
         {
           "month": 22,
           "scheduled": 6100,
-          "actual": 3273.08,
-          "status": "partial",
-          "days_late": 7
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 23,
@@ -4443,9 +4443,9 @@ const REPORT_DATA = {
       ],
       "repayment_history_summary": {
         "on_time_rate": 66.7,
-        "missed_count": 3,
-        "partial_count": 5,
-        "avg_delay_days": 11.5
+        "missed_count": 4,
+        "partial_count": 4,
+        "avg_delay_days": 12.2
       },
       "ml_check": {
         "id": "B05",
@@ -4453,10 +4453,10 @@ const REPORT_DATA = {
         "rule_condition": "structural_decline",
         "rule_risk_score": 100,
         "ml_condition": "structural_decline",
-        "ml_condition_confidence_pct": 75.2,
+        "ml_condition_confidence_pct": 75.7,
         "ml_agrees_with_rule_engine": true,
         "ml_matches_expected_archetype_validation_only": true,
-        "ml_avg_predicted_risk_pct": 33.6,
+        "ml_avg_predicted_risk_pct": 34.0,
         "actual_stress_month_rate_pct": 33.3,
         "condition_top_drivers": [
           {
@@ -4473,7 +4473,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": -0.19,
             "cohort_avg": 0.258
           }
@@ -5291,10 +5291,10 @@ const REPORT_DATA = {
         "rule_condition": "improving",
         "rule_risk_score": 5.0,
         "ml_condition": "improving",
-        "ml_condition_confidence_pct": 75.9,
+        "ml_condition_confidence_pct": 75.7,
         "ml_agrees_with_rule_engine": true,
         "ml_matches_expected_archetype_validation_only": true,
-        "ml_avg_predicted_risk_pct": 1.6,
+        "ml_avg_predicted_risk_pct": 1.8,
         "actual_stress_month_rate_pct": 0.0,
         "condition_top_drivers": [
           {
@@ -5311,7 +5311,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": 0.88,
             "cohort_avg": 0.258
           }
@@ -6109,35 +6109,35 @@ const REPORT_DATA = {
         {
           "month": 1,
           "scheduled": 4600,
-          "actual": 1977.99,
+          "actual": 1460.68,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 2,
           "scheduled": 4600,
-          "actual": 2083.57,
+          "actual": 2569.46,
           "status": "partial",
-          "days_late": 18
+          "days_late": 7
         },
         {
           "month": 3,
           "scheduled": 4600,
-          "actual": 3614.81,
-          "status": "partial",
-          "days_late": 10
+          "actual": 4600,
+          "status": "on_time",
+          "days_late": 0
         },
         {
           "month": 4,
           "scheduled": 4600,
           "actual": 4600,
           "status": "on_time",
-          "days_late": 5
+          "days_late": 0
         },
         {
           "month": 5,
           "scheduled": 4600,
-          "actual": 1604.65,
+          "actual": 2551.86,
           "status": "partial",
           "days_late": 12
         },
@@ -6151,16 +6151,16 @@ const REPORT_DATA = {
         {
           "month": 7,
           "scheduled": 4600,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 1651.0,
+          "status": "partial",
+          "days_late": 7
         },
         {
           "month": 8,
           "scheduled": 4600,
-          "actual": 2316.28,
-          "status": "partial",
-          "days_late": 12
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 9,
@@ -6172,16 +6172,16 @@ const REPORT_DATA = {
         {
           "month": 10,
           "scheduled": 4600,
-          "actual": 2833.26,
-          "status": "partial",
-          "days_late": 12
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 11,
           "scheduled": 4600,
-          "actual": 4600,
-          "status": "on_time",
-          "days_late": 0
+          "actual": 3723.42,
+          "status": "partial",
+          "days_late": 3
         },
         {
           "month": 12,
@@ -6207,14 +6207,14 @@ const REPORT_DATA = {
         {
           "month": 15,
           "scheduled": 4600,
-          "actual": 2382.33,
+          "actual": 2123.01,
           "status": "partial",
-          "days_late": 12
+          "days_late": 7
         },
         {
           "month": 16,
           "scheduled": 4600,
-          "actual": 1584.39,
+          "actual": 2540.42,
           "status": "partial",
           "days_late": 7
         },
@@ -6228,9 +6228,9 @@ const REPORT_DATA = {
         {
           "month": 18,
           "scheduled": 4600,
-          "actual": 2356.99,
+          "actual": 2100.43,
           "status": "partial",
-          "days_late": 12
+          "days_late": 18
         },
         {
           "month": 19,
@@ -6242,9 +6242,9 @@ const REPORT_DATA = {
         {
           "month": 20,
           "scheduled": 4600,
-          "actual": 2888.42,
-          "status": "partial",
-          "days_late": 10
+          "actual": 4600,
+          "status": "on_time",
+          "days_late": 0
         },
         {
           "month": 21,
@@ -6269,10 +6269,10 @@ const REPORT_DATA = {
         }
       ],
       "repayment_history_summary": {
-        "on_time_rate": 33.3,
-        "missed_count": 6,
-        "partial_count": 10,
-        "avg_delay_days": 10.6
+        "on_time_rate": 37.5,
+        "missed_count": 7,
+        "partial_count": 8,
+        "avg_delay_days": 9.1
       },
       "ml_check": {
         "id": "B07",
@@ -6283,8 +6283,8 @@ const REPORT_DATA = {
         "ml_condition_confidence_pct": 32.9,
         "ml_agrees_with_rule_engine": false,
         "ml_matches_expected_archetype_validation_only": false,
-        "ml_avg_predicted_risk_pct": 73.5,
-        "actual_stress_month_rate_pct": 66.7,
+        "ml_avg_predicted_risk_pct": 71.2,
+        "actual_stress_month_rate_pct": 62.5,
         "condition_top_drivers": [
           {
             "feature": "trend_pct_change",
@@ -6300,7 +6300,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": -0.58,
             "cohort_avg": 0.258
           }
@@ -6978,30 +6978,30 @@ const REPORT_DATA = {
         {
           "month": 2,
           "scheduled": 4400,
-          "actual": 1526.73,
-          "status": "partial",
-          "days_late": 12
-        },
-        {
-          "month": 3,
-          "scheduled": 4400,
-          "actual": 2995.99,
-          "status": "partial",
-          "days_late": 12
-        },
-        {
-          "month": 4,
-          "scheduled": 4400,
-          "actual": 2789.82,
+          "actual": 2085.31,
           "status": "partial",
           "days_late": 7
         },
         {
-          "month": 5,
+          "month": 3,
           "scheduled": 4400,
           "actual": 0.0,
           "status": "missed",
           "days_late": 0
+        },
+        {
+          "month": 4,
+          "scheduled": 4400,
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
+        },
+        {
+          "month": 5,
+          "scheduled": 4400,
+          "actual": 2790.94,
+          "status": "partial",
+          "days_late": 18
         },
         {
           "month": 6,
@@ -7132,9 +7132,9 @@ const REPORT_DATA = {
       ],
       "repayment_history_summary": {
         "on_time_rate": 83.3,
-        "missed_count": 1,
-        "partial_count": 3,
-        "avg_delay_days": 10.3
+        "missed_count": 2,
+        "partial_count": 2,
+        "avg_delay_days": 12.5
       },
       "ml_check": {
         "id": "B08",
@@ -7142,10 +7142,10 @@ const REPORT_DATA = {
         "rule_condition": "recovering",
         "rule_risk_score": 25.0,
         "ml_condition": "recovering",
-        "ml_condition_confidence_pct": 41.9,
+        "ml_condition_confidence_pct": 42.7,
         "ml_agrees_with_rule_engine": true,
         "ml_matches_expected_archetype_validation_only": true,
-        "ml_avg_predicted_risk_pct": 19.8,
+        "ml_avg_predicted_risk_pct": 18.5,
         "actual_stress_month_rate_pct": 16.7,
         "condition_top_drivers": [
           {
@@ -7162,7 +7162,7 @@ const REPORT_DATA = {
           },
           {
             "feature": "year_over_year_correlation",
-            "importance": 0.167,
+            "importance": 0.169,
             "this_borrower": 0.34,
             "cohort_avg": 0.258
           }
@@ -7406,18 +7406,18 @@ const REPORT_DATA = {
   },
   "ml_validation": {
     "risk_model": {
-      "cv_accuracy_pct": 96.9,
-      "cv_precision": 0.918,
-      "cv_recall": 0.957,
-      "cv_f1": 0.938,
+      "cv_accuracy_pct": 94.8,
+      "cv_precision": 0.86,
+      "cv_recall": 0.935,
+      "cv_f1": 0.896,
       "cv_confusion_matrix": [
         [
-          141,
-          4
+          139,
+          7
         ],
         [
-          2,
-          45
+          3,
+          43
         ]
       ],
       "n_rows": 192,
@@ -7425,43 +7425,43 @@ const REPORT_DATA = {
       "global_feature_importance": [
         {
           "feature": "net_cash_flow",
-          "coefficient": -2.897
+          "coefficient": -2.883
         },
         {
           "feature": "coverage_ratio",
-          "coefficient": -2.713
-        },
-        {
-          "feature": "month_of_year_cos",
-          "coefficient": -0.626
-        },
-        {
-          "feature": "rolling_3mo_coverage",
-          "coefficient": -0.573
-        },
-        {
-          "feature": "prev_month_partial",
-          "coefficient": -0.319
-        },
-        {
-          "feature": "mom_pct_change",
-          "coefficient": -0.247
-        },
-        {
-          "feature": "prior_missed_or_partial_rate",
-          "coefficient": 0.224
-        },
-        {
-          "feature": "prev_month_days_late",
-          "coefficient": 0.175
-        },
-        {
-          "feature": "month_of_year_sin",
-          "coefficient": 0.12
+          "coefficient": -2.684
         },
         {
           "feature": "prev_month_missed",
-          "coefficient": -0.023
+          "coefficient": 0.544
+        },
+        {
+          "feature": "rolling_3mo_coverage",
+          "coefficient": -0.511
+        },
+        {
+          "feature": "mom_pct_change",
+          "coefficient": -0.436
+        },
+        {
+          "feature": "month_of_year_cos",
+          "coefficient": -0.399
+        },
+        {
+          "feature": "prev_month_days_late",
+          "coefficient": 0.187
+        },
+        {
+          "feature": "prev_month_partial",
+          "coefficient": -0.112
+        },
+        {
+          "feature": "prior_missed_or_partial_rate",
+          "coefficient": -0.079
+        },
+        {
+          "feature": "month_of_year_sin",
+          "coefficient": 0.034
         }
       ]
     },
@@ -7479,23 +7479,23 @@ const REPORT_DATA = {
         },
         {
           "feature": "year_over_year_correlation",
-          "importance": 0.167
+          "importance": 0.169
         },
         {
           "feature": "cf_volatility_ratio",
-          "importance": 0.146
-        },
-        {
-          "feature": "num_stress_clusters",
-          "importance": 0.071
+          "importance": 0.145
         },
         {
           "feature": "is_seasonal",
           "importance": 0.071
         },
         {
+          "feature": "num_stress_clusters",
+          "importance": 0.071
+        },
+        {
           "feature": "on_time_rate",
-          "importance": 0.044
+          "importance": 0.045
         },
         {
           "feature": "longest_cluster_length",
@@ -7511,11 +7511,11 @@ const REPORT_DATA = {
         },
         {
           "feature": "avg_delay_days",
-          "importance": 0.022
+          "importance": 0.021
         },
         {
           "feature": "missed_count",
-          "importance": 0.018
+          "importance": 0.019
         },
         {
           "feature": "mean_net_cf_to_installment",

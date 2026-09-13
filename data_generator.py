@@ -249,6 +249,89 @@ _build_all_borrowers()
 def get_borrowers():
     return BORROWERS
 
+def generate_synthetic_cohort(n_per_archetype=20, seed=123):
+    """Generates a larger, disposable cohort of synthetic borrower variants,
+    for TRAINING/AUGMENTATION purposes only (see
+    ml_engine.train_condition_model) - never used by the rule-based engine
+    or shown in the dashboard as real borrowers.
+
+    Uses the exact same 8 archetype-generating functions as the real 8
+    borrowers above, but randomizes the base income level and each
+    archetype's defining parameters (shock depth/timing, growth rate,
+    decline rate, etc.) so the model sees more than one instance of each
+    pattern. `ground_truth` is fixed per archetype - same convention as
+    the real borrowers, never derived from a model.
+
+    Runs on its own local RNG state (saved and restored around
+    generation) so it never disturbs the main, reproducible 8-borrower
+    dataset used everywhere else in the pipeline.
+    """
+    saved_state = random.getstate()
+    random.seed(seed)
+    cohort = []
+
+    archetype_specs = [
+        ("stable", ["stable", "improving"],
+         lambda inc, exp: (_stable(inc), _flat_expenses(exp))),
+        ("seasonal", ["seasonal_pattern"],
+         lambda inc, exp: (_seasonal(inc), _flat_expenses(exp))),
+        ("gig", ["chronic_strain", "temporary_stress", "stable", "recovering"],
+         lambda inc, exp: (_gig(inc), _flat_expenses(exp))),
+        ("temporary_shock", ["temporary_stress"],
+         lambda inc, exp: (
+             _temporary_shock(inc, shock_start=random.randint(10, 16),
+                               shock_len=random.choice([2, 3, 4]),
+                               depth=random.uniform(0.35, 0.65)),
+             _expenses_with_bump(exp, bump_months=set(range(12, 15)),
+                                  factor=random.uniform(1.3, 1.8)))),
+        ("structural_decline", ["structural_decline"],
+         lambda inc, exp: (
+             _structural_decline(inc, decline_start=random.randint(8, 14),
+                                  monthly_drop=random.uniform(0.03, 0.07)),
+             _flat_expenses(exp))),
+        ("growing", ["improving", "stable"],
+         lambda inc, exp: (_growing(inc, monthly_growth=random.uniform(0.02, 0.04)),
+                            _flat_expenses(exp))),
+        ("chronic_strain", ["chronic_strain"],
+         lambda inc, exp: (_chronic_strain(inc), _flat_expenses(exp))),
+        ("recovering", ["recovering", "improving", "stable"],
+         lambda inc, exp: (
+             _recovering(inc, shock_start=random.randint(1, 4),
+                          shock_len=random.choice([3, 4, 5]),
+                          depth=random.uniform(0.35, 0.6),
+                          growth_after=random.uniform(0.012, 0.025)),
+             _flat_expenses(exp))),
+    ]
+
+    idx = 0
+    for archetype, ground_truth, build_fn in archetype_specs:
+        for _ in range(n_per_archetype):
+            idx += 1
+            base_income = random.uniform(10000, 20000)
+            base_expense = base_income * random.uniform(0.55, 0.75)
+            income, expenses = build_fn(base_income, base_expense)
+            avg_income = sum(income) / len(income)
+            installment = round(random.uniform(0.28, 0.4) * avg_income, -2) or 1000.0
+            principal = installment * 24
+            bid = f"SYN-{archetype}-{idx}"
+            repayment_history = _simulate_repayment_history(
+                income, expenses, installment, seed_offset=idx * 7 + seed
+            )
+            cohort.append({
+                "id": bid,
+                "name": f"Synthetic {archetype} #{idx}",
+                "archetype": archetype,
+                "income": income,
+                "expenses": expenses,
+                "loan": {"principal": round(principal, 2), "installment": round(installment, 2),
+                         "tenure_months": 24, "start_month": 0},
+                "ground_truth": ground_truth,
+                "repayment_history": repayment_history,
+            })
+
+    random.setstate(saved_state)
+    return cohort
+
 
 def generate_synthetic_cohort(n_per_archetype=20, seed=123):
     """Generates MANY more borrowers per archetype than the 8 hand-picked
