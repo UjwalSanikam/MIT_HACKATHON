@@ -85,7 +85,24 @@ Traditional fixed-installment loans don't account for these variations, leading 
 │  • Provides plain-language reasoning                         │
 └────────────────────────┬────────────────────────────────────┘
                          │
-                         ▼
+                    ┌────┴─────────────────┐
+                    │                      │
+                    ▼                      ▼
+        ┌──────────────────────┐   ┌──────────────────────┐
+        │  FORECASTING LAYER   │   │  SCENARIO COMPARISON │
+        │ (forecast_engine.py) │   │ (scenario_engine.py) │
+        │                      │   │                      │
+        │ • Trend projection   │   │ 5 strategy scoring:  │
+        │ • Seasonality adj.   │   │ • Fixed              │
+        │ • Uncertainty bands  │   │ • Seasonal Step      │
+        │ • 24-month forward   │   │ • Income-Linked      │
+        │   cash flow forecast │   │ • Temp Relief        │
+        │                      │   │ • Grace/Moratorium   │
+        └──────────────┬───────┘   └──────────┬───────────┘
+                       │                      │
+                    ┌──┴──────────────────────┘
+                    │
+                    ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  REPAYMENT STRATEGY LAYER                    │
 │            (repayment_engine.py)                             │
@@ -114,6 +131,7 @@ Traditional fixed-installment loans don't account for these variations, leading 
 │  • Cash-flow charts and trends                               │
 │  • Evidence trails for classifications                       │
 │  • Side-by-side repayment comparisons                        │
+│  • Strategy comparison matrices                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -137,6 +155,12 @@ HACKATHON/
 │
 ├── health_engine.py                   # Financial health metrics
 │                                      # Computes financial health indicators
+│
+├── forecast_engine.py                 # Forward cash-flow forecasting
+│                                      # Projects future cash flow with trend, seasonality, uncertainty
+│
+├── scenario_engine.py                 # Repayment strategy comparison
+│                                      # Evaluates and scores 5 different repayment strategies
 │
 ├── repayment_engine.py                # Adaptive repayment scheduler
 │                                      # Proposes alternative repayment structures
@@ -289,7 +313,135 @@ These metrics feed into the risk engine and provide additional context for decis
 
 ---
 
-### 5. **repayment_engine.py** — Adaptive Repayment Scheduler
+### 5. **forecast_engine.py** — Forward Cash-Flow Forecasting
+
+**Purpose:** Projects borrower cash flow for the next N months using transparent statistical methods.
+
+**Key Features:**
+
+1. **Trend Component** — Recency-weighted average of recent months
+   - Weights increase linearly toward the most recent month
+   - Recent significant shifts carry more influence than historical patterns
+   - Default window: 6 months
+   
+2. **Seasonal Component** — Calendar month-based deviations
+   - Calculates average deviation for each calendar month (Jan, Feb, etc.)
+   - Uses every historical occurrence of that month
+   - Applied only if borrower shows seasonal pattern
+   - Example: If July averages $500 above borrower's mean, all July projections include this adjustment
+   
+3. **Uncertainty Band** — Confidence intervals based on historical volatility
+   - Derived from population standard deviation of historical data
+   - Widens with $\sqrt{\text{horizon}}$ — further months are genuinely less certain
+   - Confidence interval: ~80% (Z-score = 1.28)
+   - Provides realistic bounds for forecasting accuracy
+
+**Philosophy:**
+- No machine learning or external forecasting libraries
+- Every number traces back to a statistic from the borrower's own history
+- Fully explainable — shows reasoning for every projection
+- Suitable for borrowers with 12+ months of data
+
+**Example Forecast Output:**
+```
+Borrower: Seasonal Farmer
+Historical mean income: $2,000/month
+Current trend: $2,150/month (recent 6-month weighted avg)
+June projection (peak harvest month):
+  - Base trend: $2,150
+  - Seasonal adjustment: +$800 (June typically strong)
+  - Projected: $2,950
+  - 80% confidence interval: $2,600 - $3,300
+
+July projection (post-harvest low):
+  - Base trend: $2,150
+  - Seasonal adjustment: -$600 (July typically low)
+  - Projected: $1,550
+  - 80% confidence interval: $1,200 - $1,900
+```
+
+**Use Cases:**
+- Stress-testing recommended repayment schedules
+- Forward-looking affordability assessment
+- Detecting emerging income trends before they become critical
+- Validating seasonal patterns identified by cashflow_engine
+
+---
+
+### 6. **scenario_engine.py** — Repayment Strategy Comparison Engine
+
+**Purpose:** Builds and scores multiple repayment strategy alternatives, enabling data-driven strategy selection.
+
+**Five Repayment Strategies Evaluated:**
+
+| Strategy | Description | Best For | Payment Pattern |
+|----------|-------------|----------|-----------------|
+| **Strategy A: Fixed** | Current flat installment (baseline) | Baseline comparison | Constant $X/month |
+| **Strategy B: Seasonal Step** | Higher payments in peak months, lower in lean months (same total as Fixed) | Seasonal borrowers | Variable, aligned to income |
+| **Strategy C: Income-Linked** | Payment = 35% of disposable cash, clamped to 50%-160% of original installment | Irregular income | Truly flexible, income-responsive |
+| **Strategy D: Temporary Relief** | Reduced payments during historical stress months, deferred amount recovered over remaining term | Temporary shocks | Low in stress periods, normal elsewhere |
+| **Strategy E: Grace/Moratorium** | Zero payment during worst historical stress episode, deferred amount re-amortized after | Severe temporary crisis | Pause followed by longer amortization |
+
+**Strategy Scoring Metrics:**
+
+Each strategy is evaluated on three dimensions (weights: 45% sustainability, 35% recovery, 20% stability):
+
+1. **Sustainability Score** (Affordability during execution)
+   - Measures: How often does available cash remain positive?
+   - Calculation: Percentage of months where (cash flow - payment) > safety buffer
+   - Target: ≥80% of months comfortable
+   
+2. **Recovery Score** (Loan completion probability)
+   - Measures: Total repayment completed, with timeline penalty
+   - Calculation: (Amount repaid / Total due) × time-adjustment factor
+   - Longer terms reduce recovery score (borrower risk extends)
+   - Target: High recovery despite timeline extension
+
+3. **Stability Score** (Payment consistency)
+   - Measures: Variance in payment amounts
+   - Calculation: 1 / (coefficient of variation + 1)
+   - Higher = more predictable
+   - Fixed and Seasonal are inherently more stable than income-linked
+
+**Optimization Logic:**
+
+1. Scores all 5 strategies against borrower's **actual historical cash flow**
+2. Selects top-scoring strategy as primary recommendation
+3. **Eligibility constraint:** Grace/Moratorium only eligible if condition ∈ {temporary_stress, structural_decline, chronic_strain}
+   - Prevents offering payment holidays to already-stable borrowers
+   - Evidence-based: Only recommended when circumstances justify it
+
+**Income-Linked Defaults:**
+- Payment percentage: 35% of disposable cash flow
+- Minimum payment: 50% of original installment
+- Maximum payment: 160% of original installment
+- Safety buffer: 10% of average monthly income
+- Synchronized with dashboard's live what-if slider to prevent divergence
+
+**Example Scenario Comparison:**
+```
+Borrower: Temporary Shock (Factory closure, but temporary)
+Original installment: $500/month
+24-month history: Stable $3,000 income, then $500/month shock for 3 months, recovery
+
+Strategy Results:
+┌─────────────────────┬──────────────────┬────────────────────┐
+│ Strategy            │ Sustainability   │ Default Risk       │
+├─────────────────────┼──────────────────┼────────────────────┤
+│ A: Fixed ($500)     │ 75% comfortable  │ 25% default risk   │
+│ B: Seasonal         │ N/A (not seasonal│ No applicable      │
+│ C: Income-Linked    │ 88% comfortable  │ 12% default risk   │
+│ D: Temp Relief      │ 92% comfortable  │ 8% default risk    │
+│ E: Grace/Moratorium │ 95% comfortable  │ 5% default risk    │
+├─────────────────────┴──────────────────┴────────────────────┤
+│ Recommendation: Strategy E (Grace/Moratorium)              │
+│ Reasoning: Eligible + highest sustainability              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 7. **repayment_engine.py** — Adaptive Repayment Scheduler
 
 **Purpose:** Proposes concrete alternative repayment structures tailored to each borrower's condition.
 
@@ -321,7 +473,7 @@ Months 10-12 (Peak Again):  $650/month
 
 ---
 
-### 6. **generate_report.py** — Pipeline Orchestrator
+### 8. **generate_report.py** — Pipeline Orchestrator
 
 **Purpose:** Runs the complete analysis pipeline for all borrowers and generates output.
 
@@ -338,7 +490,7 @@ Months 10-12 (Peak Again):  $650/month
 
 ---
 
-### 7. **Dashboard System** — Interactive Visualization
+### 9. **Dashboard System** — Interactive Visualization
 
 **Components:**
 
@@ -539,9 +691,29 @@ User Input (Borrower Financial History)
 │ • Create plain-language reasoning   │
 └──────────────┬──────────────────────┘
                │
-               ▼
+        ┌──────┴──────────┐
+        │                 │
+        ▼                 ▼
+  ┌──────────────┐  ┌──────────────┐
+  │ STEP 3A:     │  │ STEP 3B:     │
+  │ FORECAST     │  │ COMPARE      │
+  │ CASH-FLOW    │  │ STRATEGIES   │
+  ├──────────────┤  ├──────────────┤
+  │ • Trend      │  │ • Score 5    │
+  │   projection │  │   strategies │
+  │ • Seasonal   │  │ • Rank by    │
+  │   adjustment │  │   quality    │
+  │ • 24-month   │  │ • Select     │
+  │   forecast   │  │   optimal    │
+  │ • Uncertainty│  │ • Compare    │
+  │   bounds     │  │   outcomes   │
+  └──────┬───────┘  └───────┬──────┘
+         │                  │
+         └──────┬───────────┘
+                │
+                ▼
 ┌─────────────────────────────────────┐
-│   STEP 3: RECOMMEND RESTRUCTURING   │
+│   STEP 4: RECOMMEND RESTRUCTURING   │
 ├─────────────────────────────────────┤
 │ • Propose adaptive repayment plan   │
 │ • Calculate alternative schedules   │
@@ -551,10 +723,12 @@ User Input (Borrower Financial History)
                │
                ▼
 ┌─────────────────────────────────────┐
-│   STEP 4: GENERATE DASHBOARD DATA   │
+│   STEP 5: GENERATE DASHBOARD DATA   │
 ├─────────────────────────────────────┤
 │ • Aggregate all results             │
 │ • Format for visualization          │
+│ • Include forecast data             │
+│ • Include scenario comparisons      │
 │ • Write to dashboard/data.js        │
 │ • Prepare evidence summaries        │
 └──────────────┬──────────────────────┘
@@ -569,9 +743,14 @@ User Input (Borrower Financial History)
 1. User opens `dashboard/index.html` in browser
 2. Browser loads HTML structure
 3. `app.js` executes and reads `data.js`
-4. Charts are rendered using Chart.js library
+4. Charts are rendered using Chart.js library:
+   - Historical cash-flow data from cashflow_engine
+   - Forward forecasts from forecast_engine
+   - Strategy comparison data from scenario_engine
+   - Risk and evidence data from risk_engine
 5. Interactive features become available
 6. User can click to filter and explore results
+7. User can compare repayment strategies and forecasts side-by-side
 
 ---
 
@@ -596,25 +775,49 @@ When you click on a borrower, you see:
    - Loan installment line
    - Safety buffer visualization
    - Shaded stress periods
+   - Historical data (24 months)
 
-2. **Evidence Trail**
+2. **Cash-Flow Forecast Chart** (if enabled)
+   - Forward-looking 6-12 month projection
+   - Trend line showing expected direction
+   - Uncertainty bands (80% confidence interval)
+   - Seasonal adjustments applied
+   - Helps assess future affordability
+
+3. **Evidence Trail**
    - Plain-language reasoning
    - Specific metrics and numbers
    - Justification for classification
    - Risk assessment summary
 
-3. **Repayment Comparison Chart**
+4. **Repayment Comparison Chart**
    - Original payment schedule (current terms)
    - Recommended payment schedule (adapted to condition)
    - Total interest paid comparison
    - Impact on default risk
+   - Timeline comparison
 
-4. **Metrics Panel**
+5. **Strategy Comparison Matrix** (Scenario Analysis)
+   - All 5 repayment strategies evaluated:
+     - Strategy A: Fixed (current)
+     - Strategy B: Seasonal Step
+     - Strategy C: Income-Linked
+     - Strategy D: Temporary Relief
+     - Strategy E: Grace/Moratorium
+   - Metrics for each strategy:
+     - Sustainability score (affordability)
+     - Recovery score (completion probability)
+     - Stability score (payment consistency)
+     - Overall ranking
+   - Highlighted: Recommended strategy
+
+6. **Metrics Panel**
    - Affordability Score (0-100)
    - Risk Score (0-100)
    - Condition Classification
    - Seasonality Index
    - Trend Direction
+   - Forecast confidence level
 
 ### Interpreting Scores
 
