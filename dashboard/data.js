@@ -722,9 +722,9 @@ const REPORT_DATA = {
         {
           "month": 9,
           "scheduled": 5500,
-          "actual": 4617.7,
-          "status": "partial",
-          "days_late": 3
+          "actual": 5500,
+          "status": "on_time",
+          "days_late": 0
         },
         {
           "month": 10,
@@ -826,10 +826,42 @@ const REPORT_DATA = {
         }
       ],
       "repayment_history_summary": {
-        "on_time_rate": 95.8,
+        "on_time_rate": 100.0,
         "missed_count": 0,
-        "partial_count": 1,
-        "avg_delay_days": 3
+        "partial_count": 0,
+        "avg_delay_days": 0.0
+      },
+      "ml_check": {
+        "id": "B01",
+        "name": "Anitha R. - Tailoring Shop",
+        "rule_condition": "stable",
+        "rule_risk_score": 18.8,
+        "ml_condition": "stable",
+        "ml_condition_confidence_pct": 95.5,
+        "ml_agrees_with_rule_engine": true,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 7.4,
+        "actual_stress_month_rate_pct": 0.0,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": 10.1,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 0.18,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": 0.1,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -1555,9 +1587,9 @@ const REPORT_DATA = {
         {
           "month": 1,
           "scheduled": 6250,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 3305.35,
+          "status": "partial",
+          "days_late": 12
         },
         {
           "month": 2,
@@ -1590,7 +1622,7 @@ const REPORT_DATA = {
         {
           "month": 6,
           "scheduled": 6250,
-          "actual": 2470.95,
+          "actual": 2334.26,
           "status": "partial",
           "days_late": 7
         },
@@ -1632,16 +1664,16 @@ const REPORT_DATA = {
         {
           "month": 12,
           "scheduled": 6250,
-          "actual": 2731.93,
-          "status": "partial",
-          "days_late": 18
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 13,
           "scheduled": 6250,
-          "actual": 3385.62,
+          "actual": 2744.98,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 14,
@@ -1681,9 +1713,9 @@ const REPORT_DATA = {
         {
           "month": 19,
           "scheduled": 6250,
-          "actual": 1972.24,
-          "status": "partial",
-          "days_late": 7
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 20,
@@ -1716,9 +1748,41 @@ const REPORT_DATA = {
       ],
       "repayment_history_summary": {
         "on_time_rate": 66.7,
-        "missed_count": 4,
-        "partial_count": 4,
-        "avg_delay_days": 9.8
+        "missed_count": 5,
+        "partial_count": 3,
+        "avg_delay_days": 10.3
+      },
+      "ml_check": {
+        "id": "B02",
+        "name": "Manjunath K. - Areca Nut Farmer",
+        "rule_condition": "seasonal_pattern",
+        "rule_risk_score": 42.3,
+        "ml_condition": "seasonal_pattern",
+        "ml_condition_confidence_pct": 93.3,
+        "ml_agrees_with_rule_engine": true,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 32.7,
+        "actual_stress_month_rate_pct": 33.3,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": -5.7,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 1.595,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": 0.96,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -2447,9 +2511,9 @@ const REPORT_DATA = {
         {
           "month": 4,
           "scheduled": 4200,
-          "actual": 2456.56,
-          "status": "partial",
-          "days_late": 18
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 5,
@@ -2468,16 +2532,16 @@ const REPORT_DATA = {
         {
           "month": 7,
           "scheduled": 4200,
-          "actual": 4200,
-          "status": "on_time",
-          "days_late": 5
+          "actual": 2578.82,
+          "status": "partial",
+          "days_late": 10
         },
         {
           "month": 8,
           "scheduled": 4200,
-          "actual": 2542.05,
+          "actual": 2438.46,
           "status": "partial",
-          "days_late": 7
+          "days_late": 18
         },
         {
           "month": 9,
@@ -2496,16 +2560,16 @@ const REPORT_DATA = {
         {
           "month": 11,
           "scheduled": 4200,
-          "actual": 3582.78,
-          "status": "partial",
-          "days_late": 7
+          "actual": 4200,
+          "status": "on_time",
+          "days_late": 2
         },
         {
           "month": 12,
           "scheduled": 4200,
           "actual": 4200,
           "status": "on_time",
-          "days_late": 5
+          "days_late": 0
         },
         {
           "month": 13,
@@ -2524,9 +2588,9 @@ const REPORT_DATA = {
         {
           "month": 15,
           "scheduled": 4200,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 2773.68,
+          "status": "partial",
+          "days_late": 18
         },
         {
           "month": 16,
@@ -2538,9 +2602,9 @@ const REPORT_DATA = {
         {
           "month": 17,
           "scheduled": 4200,
-          "actual": 2753.28,
-          "status": "partial",
-          "days_late": 12
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 18,
@@ -2559,9 +2623,9 @@ const REPORT_DATA = {
         {
           "month": 20,
           "scheduled": 4200,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 1760.57,
+          "status": "partial",
+          "days_late": 7
         },
         {
           "month": 21,
@@ -2580,16 +2644,48 @@ const REPORT_DATA = {
         {
           "month": 23,
           "scheduled": 4200,
-          "actual": 2061.61,
+          "actual": 1324.97,
           "status": "partial",
-          "days_late": 12
+          "days_late": 7
         }
       ],
       "repayment_history_summary": {
         "on_time_rate": 66.7,
         "missed_count": 3,
         "partial_count": 5,
-        "avg_delay_days": 9.4
+        "avg_delay_days": 10.3
+      },
+      "ml_check": {
+        "id": "B03",
+        "name": "Farida S. - App-based Delivery",
+        "rule_condition": "recovering",
+        "rule_risk_score": 32.5,
+        "ml_condition": "chronic_strain",
+        "ml_condition_confidence_pct": 45.6,
+        "ml_agrees_with_rule_engine": false,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 38.0,
+        "actual_stress_month_rate_pct": 33.3,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": 9.3,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 1.289,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": 0.03,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -3341,16 +3437,16 @@ const REPORT_DATA = {
         {
           "month": 13,
           "scheduled": 5200,
-          "actual": 1620.83,
-          "status": "partial",
-          "days_late": 18
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 14,
           "scheduled": 5200,
-          "actual": 3472.45,
+          "actual": 2269.94,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 15,
@@ -3418,9 +3514,41 @@ const REPORT_DATA = {
       ],
       "repayment_history_summary": {
         "on_time_rate": 87.5,
-        "missed_count": 1,
-        "partial_count": 2,
-        "avg_delay_days": 12.5
+        "missed_count": 2,
+        "partial_count": 1,
+        "avg_delay_days": 12
+      },
+      "ml_check": {
+        "id": "B04",
+        "name": "Ravi P. - Auto Rickshaw Owner",
+        "rule_condition": "temporary_stress",
+        "rule_risk_score": 43.8,
+        "ml_condition": "temporary_stress",
+        "ml_condition_confidence_pct": 53.6,
+        "ml_agrees_with_rule_engine": true,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 15.3,
+        "actual_stress_month_rate_pct": 12.5,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": 633.1,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 1.472,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": 0.12,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -4004,7 +4132,7 @@ const REPORT_DATA = {
         }
       },
       "financial_health": {
-        "score": 40.1,
+        "score": 40.0,
         "breakdown": {
           "cash_flow_stability": 58.9,
           "repayment_coverage": 52.7,
@@ -4254,14 +4382,14 @@ const REPORT_DATA = {
           "scheduled": 6100,
           "actual": 6100,
           "status": "on_time",
-          "days_late": 0
+          "days_late": 2
         },
         {
           "month": 16,
           "scheduled": 6100,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 2679.21,
+          "status": "partial",
+          "days_late": 12
         },
         {
           "month": 17,
@@ -4273,9 +4401,9 @@ const REPORT_DATA = {
         {
           "month": 18,
           "scheduled": 6100,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 3155.41,
+          "status": "partial",
+          "days_late": 12
         },
         {
           "month": 19,
@@ -4287,23 +4415,23 @@ const REPORT_DATA = {
         {
           "month": 20,
           "scheduled": 6100,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 3354.71,
+          "status": "partial",
+          "days_late": 18
         },
         {
           "month": 21,
           "scheduled": 6100,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 3287.71,
+          "status": "partial",
+          "days_late": 18
         },
         {
           "month": 22,
           "scheduled": 6100,
-          "actual": 1916.07,
+          "actual": 3273.08,
           "status": "partial",
-          "days_late": 12
+          "days_late": 7
         },
         {
           "month": 23,
@@ -4315,9 +4443,41 @@ const REPORT_DATA = {
       ],
       "repayment_history_summary": {
         "on_time_rate": 66.7,
-        "missed_count": 7,
-        "partial_count": 1,
-        "avg_delay_days": 12
+        "missed_count": 3,
+        "partial_count": 5,
+        "avg_delay_days": 11.5
+      },
+      "ml_check": {
+        "id": "B05",
+        "name": "Suresh N. - Small Kirana Store",
+        "rule_condition": "structural_decline",
+        "rule_risk_score": 100,
+        "ml_condition": "structural_decline",
+        "ml_condition_confidence_pct": 75.2,
+        "ml_agrees_with_rule_engine": true,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 33.6,
+        "actual_stress_month_rate_pct": 33.3,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": -66.9,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 0.68,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": -0.19,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -5124,6 +5284,38 @@ const REPORT_DATA = {
         "missed_count": 0,
         "partial_count": 0,
         "avg_delay_days": 0.0
+      },
+      "ml_check": {
+        "id": "B06",
+        "name": "Deepa M. - Home Catering Business",
+        "rule_condition": "improving",
+        "rule_risk_score": 5.0,
+        "ml_condition": "improving",
+        "ml_condition_confidence_pct": 75.9,
+        "ml_agrees_with_rule_engine": true,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 1.6,
+        "actual_stress_month_rate_pct": 0.0,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": 32.0,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 0.604,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": 0.88,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -5910,44 +6102,44 @@ const REPORT_DATA = {
         {
           "month": 0,
           "scheduled": 4600,
-          "actual": 2843.86,
-          "status": "partial",
-          "days_late": 12
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 1,
           "scheduled": 4600,
-          "actual": 2477.32,
+          "actual": 1977.99,
           "status": "partial",
-          "days_late": 12
+          "days_late": 7
         },
         {
           "month": 2,
           "scheduled": 4600,
-          "actual": 2339.22,
+          "actual": 2083.57,
           "status": "partial",
-          "days_late": 7
+          "days_late": 18
         },
         {
           "month": 3,
           "scheduled": 4600,
-          "actual": 4600,
-          "status": "on_time",
-          "days_late": 0
+          "actual": 3614.81,
+          "status": "partial",
+          "days_late": 10
         },
         {
           "month": 4,
           "scheduled": 4600,
-          "actual": 3112.46,
-          "status": "partial",
-          "days_late": 7
+          "actual": 4600,
+          "status": "on_time",
+          "days_late": 5
         },
         {
           "month": 5,
           "scheduled": 4600,
-          "actual": 2597.68,
+          "actual": 1604.65,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 6,
@@ -5966,30 +6158,30 @@ const REPORT_DATA = {
         {
           "month": 8,
           "scheduled": 4600,
-          "actual": 2397.38,
-          "status": "partial",
-          "days_late": 18
-        },
-        {
-          "month": 9,
-          "scheduled": 4600,
-          "actual": 1413.12,
+          "actual": 2316.28,
           "status": "partial",
           "days_late": 12
         },
         {
+          "month": 9,
+          "scheduled": 4600,
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
+        },
+        {
           "month": 10,
           "scheduled": 4600,
-          "actual": 1498.32,
+          "actual": 2833.26,
           "status": "partial",
-          "days_late": 18
+          "days_late": 12
         },
         {
           "month": 11,
           "scheduled": 4600,
           "actual": 4600,
           "status": "on_time",
-          "days_late": 5
+          "days_late": 0
         },
         {
           "month": 12,
@@ -6001,9 +6193,9 @@ const REPORT_DATA = {
         {
           "month": 13,
           "scheduled": 4600,
-          "actual": 2567.48,
-          "status": "partial",
-          "days_late": 18
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 14,
@@ -6015,14 +6207,14 @@ const REPORT_DATA = {
         {
           "month": 15,
           "scheduled": 4600,
-          "actual": 2690.71,
+          "actual": 2382.33,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 16,
           "scheduled": 4600,
-          "actual": 2960.02,
+          "actual": 1584.39,
           "status": "partial",
           "days_late": 7
         },
@@ -6036,9 +6228,9 @@ const REPORT_DATA = {
         {
           "month": 18,
           "scheduled": 4600,
-          "actual": 3172.82,
+          "actual": 2356.99,
           "status": "partial",
-          "days_late": 18
+          "days_late": 12
         },
         {
           "month": 19,
@@ -6050,9 +6242,9 @@ const REPORT_DATA = {
         {
           "month": 20,
           "scheduled": 4600,
-          "actual": 4600,
-          "status": "on_time",
-          "days_late": 5
+          "actual": 2888.42,
+          "status": "partial",
+          "days_late": 10
         },
         {
           "month": 21,
@@ -6077,10 +6269,42 @@ const REPORT_DATA = {
         }
       ],
       "repayment_history_summary": {
-        "on_time_rate": 37.5,
-        "missed_count": 3,
-        "partial_count": 12,
-        "avg_delay_days": 10.9
+        "on_time_rate": 33.3,
+        "missed_count": 6,
+        "partial_count": 10,
+        "avg_delay_days": 10.6
+      },
+      "ml_check": {
+        "id": "B07",
+        "name": "Yusuf B. - Street Vendor",
+        "rule_condition": "chronic_strain",
+        "rule_risk_score": 90.0,
+        "ml_condition": "recovering",
+        "ml_condition_confidence_pct": 32.9,
+        "ml_agrees_with_rule_engine": false,
+        "ml_matches_expected_archetype_validation_only": false,
+        "ml_avg_predicted_risk_pct": 73.5,
+        "actual_stress_month_rate_pct": 66.7,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": 19.4,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 0.895,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": -0.58,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     },
     {
@@ -6754,30 +6978,30 @@ const REPORT_DATA = {
         {
           "month": 2,
           "scheduled": 4400,
-          "actual": 0.0,
-          "status": "missed",
-          "days_late": 0
+          "actual": 1526.73,
+          "status": "partial",
+          "days_late": 12
         },
         {
           "month": 3,
           "scheduled": 4400,
-          "actual": 2360.05,
+          "actual": 2995.99,
           "status": "partial",
-          "days_late": 7
+          "days_late": 12
         },
         {
           "month": 4,
           "scheduled": 4400,
-          "actual": 2490.28,
+          "actual": 2789.82,
           "status": "partial",
-          "days_late": 18
+          "days_late": 7
         },
         {
           "month": 5,
           "scheduled": 4400,
-          "actual": 2242.96,
-          "status": "partial",
-          "days_late": 7
+          "actual": 0.0,
+          "status": "missed",
+          "days_late": 0
         },
         {
           "month": 6,
@@ -6910,7 +7134,39 @@ const REPORT_DATA = {
         "on_time_rate": 83.3,
         "missed_count": 1,
         "partial_count": 3,
-        "avg_delay_days": 10.7
+        "avg_delay_days": 10.3
+      },
+      "ml_check": {
+        "id": "B08",
+        "name": "Lakshmi V. - Home Catering Startup",
+        "rule_condition": "recovering",
+        "rule_risk_score": 25.0,
+        "ml_condition": "recovering",
+        "ml_condition_confidence_pct": 41.9,
+        "ml_agrees_with_rule_engine": true,
+        "ml_matches_expected_archetype_validation_only": true,
+        "ml_avg_predicted_risk_pct": 19.8,
+        "actual_stress_month_rate_pct": 16.7,
+        "condition_top_drivers": [
+          {
+            "feature": "trend_pct_change",
+            "importance": 0.181,
+            "this_borrower": 22.2,
+            "cohort_avg": -16.255
+          },
+          {
+            "feature": "seasonality_spread_ratio",
+            "importance": 0.172,
+            "this_borrower": 0.831,
+            "cohort_avg": 0.989
+          },
+          {
+            "feature": "year_over_year_correlation",
+            "importance": 0.167,
+            "this_borrower": 0.34,
+            "cohort_avg": 0.258
+          }
+        ]
       }
     }
   ],
@@ -7147,5 +7403,125 @@ const REPORT_DATA = {
   "meta": {
     "forecast_months": 6,
     "safety_buffer_pct": 10
+  },
+  "ml_validation": {
+    "risk_model": {
+      "cv_accuracy_pct": 96.9,
+      "cv_precision": 0.918,
+      "cv_recall": 0.957,
+      "cv_f1": 0.938,
+      "cv_confusion_matrix": [
+        [
+          141,
+          4
+        ],
+        [
+          2,
+          45
+        ]
+      ],
+      "n_rows": 192,
+      "note": "Evaluated with leave-one-borrower-out CV: every scored prediction came from a borrower excluded from that fold's training data, so this accuracy is an honest generalization estimate, not a memorization number. A point or two of run-to-run variation is expected (borderline months near the decision boundary can flip with BLAS floating-point nondeterminism) - treat this as ~95%, not a fixed number.",
+      "global_feature_importance": [
+        {
+          "feature": "net_cash_flow",
+          "coefficient": -2.897
+        },
+        {
+          "feature": "coverage_ratio",
+          "coefficient": -2.713
+        },
+        {
+          "feature": "month_of_year_cos",
+          "coefficient": -0.626
+        },
+        {
+          "feature": "rolling_3mo_coverage",
+          "coefficient": -0.573
+        },
+        {
+          "feature": "prev_month_partial",
+          "coefficient": -0.319
+        },
+        {
+          "feature": "mom_pct_change",
+          "coefficient": -0.247
+        },
+        {
+          "feature": "prior_missed_or_partial_rate",
+          "coefficient": 0.224
+        },
+        {
+          "feature": "prev_month_days_late",
+          "coefficient": 0.175
+        },
+        {
+          "feature": "month_of_year_sin",
+          "coefficient": 0.12
+        },
+        {
+          "feature": "prev_month_missed",
+          "coefficient": -0.023
+        }
+      ]
+    },
+    "condition_model": {
+      "cv_accuracy_pct": 87.5,
+      "caveat": "Trained on 8 real borrowers augmented with 160 synthetic archetype variants (same generative logic, randomized parameters) to give the model enough rows to have a fair shot at generalizing. cv_accuracy_pct above is measured ONLY on the 8 real borrowers, each held out of training in its own fold - that's the honest number. cv_accuracy_pct_full_pool (94.6%) includes the easier synthetic clones and will look better than reality; don't quote that one as the headline. Real-outcome data (actual future repayment behavior) is still the right long-term fix, not more synthetic variants of the same 8 hand-designed stories.",
+      "global_feature_importance": [
+        {
+          "feature": "trend_pct_change",
+          "importance": 0.181
+        },
+        {
+          "feature": "seasonality_spread_ratio",
+          "importance": 0.172
+        },
+        {
+          "feature": "year_over_year_correlation",
+          "importance": 0.167
+        },
+        {
+          "feature": "cf_volatility_ratio",
+          "importance": 0.146
+        },
+        {
+          "feature": "num_stress_clusters",
+          "importance": 0.071
+        },
+        {
+          "feature": "is_seasonal",
+          "importance": 0.071
+        },
+        {
+          "feature": "on_time_rate",
+          "importance": 0.044
+        },
+        {
+          "feature": "longest_cluster_length",
+          "importance": 0.042
+        },
+        {
+          "feature": "trend_recovering",
+          "importance": 0.033
+        },
+        {
+          "feature": "stress_ratio",
+          "importance": 0.022
+        },
+        {
+          "feature": "avg_delay_days",
+          "importance": 0.022
+        },
+        {
+          "feature": "missed_count",
+          "importance": 0.018
+        },
+        {
+          "feature": "mean_net_cf_to_installment",
+          "importance": 0.01
+        }
+      ]
+    }
   }
 };

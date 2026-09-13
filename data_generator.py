@@ -165,10 +165,10 @@ def _simulate_repayment_history(income, expenses, installment, seed_offset=0):
 BORROWERS = []
 
 
-def _add_borrower(bid, name, archetype, income, expenses, loan, ground_truth):
+def _build_borrower_dict(bid, name, archetype, income, expenses, loan, ground_truth, seed_offset):
     repayment_history = _simulate_repayment_history(income, expenses, loan["installment"],
-                                                      seed_offset=hash(bid) % 1000)
-    BORROWERS.append({
+                                                      seed_offset=seed_offset)
+    return {
         "id": bid,
         "name": name,
         "archetype": archetype,
@@ -177,7 +177,12 @@ def _add_borrower(bid, name, archetype, income, expenses, loan, ground_truth):
         "loan": loan,
         "ground_truth": ground_truth,  # expected condition label(s), for evaluate.py only
         "repayment_history": repayment_history,
-    })
+    }
+
+
+def _add_borrower(bid, name, archetype, income, expenses, loan, ground_truth):
+    BORROWERS.append(_build_borrower_dict(bid, name, archetype, income, expenses, loan,
+                                           ground_truth, seed_offset=hash(bid) % 1000))
 
 
 def _build_all_borrowers():
@@ -243,6 +248,72 @@ _build_all_borrowers()
 
 def get_borrowers():
     return BORROWERS
+
+
+def generate_synthetic_cohort(n_per_archetype=20, seed=123):
+    """Generates MANY more borrowers per archetype than the 8 hand-picked
+    demo cases, by re-running the same pattern generators (`_stable`,
+    `_seasonal`, etc.) with randomized bases, noise, shock timing, and loan
+    sizing. Used only to give ml_engine.py's condition model enough labeled
+    rows to have an honest shot at generalizing - the original 8 borrowers
+    stay the system's "real" demo cases everywhere else (dashboard,
+    evaluate.py, risk_engine.py).
+
+    Uses a private random.Random-style save/restore of the global `random`
+    module state so this never disturbs the reproducibility of the main
+    8-borrower dataset built at import time with seed=42.
+    """
+    saved_state = random.getstate()
+    random.seed(seed)
+    cohort = []
+
+    archetype_specs = [
+        ("stable", lambda base: _stable(base), ["stable", "improving"]),
+        ("seasonal", lambda base: _seasonal(base), ["seasonal_pattern"]),
+        ("gig", lambda base: _gig(base),
+         ["chronic_strain", "temporary_stress", "stable", "recovering"]),
+        ("temporary_shock", lambda base: _temporary_shock(
+            base, shock_start=random.randint(9, 17), shock_len=random.choice([2, 3, 4]),
+            depth=random.uniform(0.35, 0.65)), ["temporary_stress"]),
+        ("structural_decline", lambda base: _structural_decline(
+            base, decline_start=random.randint(9, 15), monthly_drop=random.uniform(0.03, 0.07)),
+         ["structural_decline"]),
+        ("growing", lambda base: _growing(base, monthly_growth=random.uniform(0.015, 0.04)),
+         ["improving", "stable"]),
+        ("chronic_strain", lambda base: _chronic_strain(base), ["chronic_strain"]),
+        ("recovering", lambda base: _recovering(
+            base, shock_start=random.randint(1, 4), shock_len=random.choice([3, 4, 5]),
+            depth=random.uniform(0.35, 0.6), growth_after=random.uniform(0.01, 0.025)),
+         ["recovering", "improving", "stable"]),
+    ]
+
+    idx = 0
+    for archetype, income_fn, ground_truth in archetype_specs:
+        for _ in range(n_per_archetype):
+            idx += 1
+            income_base = random.uniform(11000, 21000)
+            expense_base = income_base * random.uniform(0.5, 0.75)
+            income = income_fn(income_base)
+            expenses = _flat_expenses(expense_base, noise_pct=random.uniform(0.04, 0.09))
+
+            mean_income = sum(income) / len(income)
+            typical_net = mean_income - expense_base
+            # Randomize how tightly the installment fits typical cash flow
+            # so we get a real mix of comfortable and genuinely tight cases
+            # within each archetype, not just archetype-level separation.
+            installment = round(max(500.0, typical_net * random.uniform(0.35, 0.95)), 2)
+            loan = {
+                "principal": round(installment * 20, 2), "installment": installment,
+                "tenure_months": 24, "start_month": 0,
+            }
+            bid = f"SYN-{archetype}-{idx:03d}"
+            cohort.append(_build_borrower_dict(
+                bid, f"Synthetic {archetype} #{idx}", archetype, income, expenses, loan,
+                ground_truth, seed_offset=idx
+            ))
+
+    random.setstate(saved_state)
+    return cohort
 
 
 if __name__ == "__main__":

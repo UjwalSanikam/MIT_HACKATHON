@@ -343,6 +343,7 @@ function renderMain() {
       <button data-subtab="cashflow" class="${state.detailTab === 'cashflow' ? 'active' : ''}">Cash Flow &amp; Forecast</button>
       <button data-subtab="scenarios" class="${state.detailTab === 'scenarios' ? 'active' : ''}">Scenarios &amp; What-If</button>
       <button data-subtab="evidence" class="${state.detailTab === 'evidence' ? 'active' : ''}">Evidence &amp; Warnings</button>
+      <button data-subtab="ml_check" class="${state.detailTab === 'ml_check' ? 'active' : ''}">ML Double-Check</button>
     </div>
     <div id="detailContent"></div>
   `;
@@ -365,6 +366,7 @@ function renderDetailContent() {
   if (state.detailTab === 'cashflow') el.innerHTML = cashflowHTML(b);
   if (state.detailTab === 'scenarios') el.innerHTML = scenariosHTML(b);
   if (state.detailTab === 'evidence') el.innerHTML = evidenceHTML(b);
+  if (state.detailTab === 'ml_check') el.innerHTML = mlCheckHTML(b);
 
   if (state.detailTab === 'cashflow') { drawCashFlowChart(b); drawForecastChart(b); }
   if (state.detailTab === 'scenarios') { drawScheduleChart(b); wireWhatIf(b); }
@@ -834,10 +836,103 @@ function evidenceHTML(b) {
 }
 
 // ============================================================
+// ML DOUBLE-CHECK TAB
+// ============================================================
+function mlCheckHTML(b) {
+  const ml = b.ml_check;
+  if (!ml) {
+    return `
+      <section>
+        <h2>ML double-check</h2>
+        <div class="panel">
+          <p style="font-size:0.9rem;color:var(--ink-soft);">
+            The ML layer wasn't included in this report - either scikit-learn/numpy aren't installed,
+            or it failed while generating this data. Run <code>pip install -r requirements.txt</code>
+            then regenerate with <code>python3 generate_report.py</code> to enable it.
+          </p>
+        </div>
+      </section>`;
+  }
+
+  const v = REPORT_DATA.ml_validation;
+  const ruleM = meta(ml.rule_condition);
+  const mlM = meta(ml.ml_condition);
+  const agreeBadge = ml.ml_agrees_with_rule_engine
+    ? `<span class="badge-inline" style="background:var(--good-soft);color:var(--good);border-color:var(--good);">AGREES</span>`
+    : `<span class="badge-inline" style="background:var(--risk-soft);color:var(--risk);border-color:var(--risk);">DISAGREES - review recommended</span>`;
+
+  const driverRows = ml.condition_top_drivers.map(d => `
+    <tr>
+      <td style="text-align:left;">${d.feature.replace(/_/g, ' ')}</td>
+      <td>${d.this_borrower}</td>
+      <td>${d.cohort_avg}</td>
+      <td>${d.importance}</td>
+    </tr>`).join('');
+
+  return `
+    <section>
+      <div class="callout" style="border-left-color:var(--slate);background:var(--slate-soft);">
+        <strong>What is this?</strong> A separate, learned (machine-learning) model trained on this
+        borrower's data cross-checks the rule-based engine above. It never overrides the rule engine -
+        it flags where a human might want to take a second look.
+      </div>
+    </section>
+
+    <section>
+      <h2>Condition: rule engine vs. ML</h2>
+      <div class="panel">
+        <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:0.7rem;color:var(--ink-soft);margin-bottom:4px;">RULE ENGINE SAYS</div>
+            <span class="stamp" style="color:${ruleM.color};">${ruleM.label}</span>
+          </div>
+          <div>
+            <div style="font-size:0.7rem;color:var(--ink-soft);margin-bottom:4px;">ML MODEL SAYS</div>
+            <span class="stamp" style="color:${mlM.color};">${mlM.label}</span>
+            <span class="chip">Confidence ${ml.ml_condition_confidence_pct}%</span>
+          </div>
+          <div>${agreeBadge}</div>
+        </div>
+        <table class="datatable">
+          <thead><tr><th style="text-align:left;">Top features behind the ML call</th><th>This borrower</th><th>Cohort avg</th><th>Importance</th></tr></thead>
+          <tbody>${driverRows}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Monthly stress risk: rule engine vs. ML</h2>
+      <div class="score-row">
+        <div class="score-card"><div class="num figure">${ml.rule_risk_score}</div><div class="label">RULE ENGINE RISK SCORE (0-100)</div></div>
+        <div class="score-card"><div class="num figure">${ml.ml_avg_predicted_risk_pct}%</div><div class="label">ML AVG PREDICTED MONTHLY STRESS RISK</div></div>
+        <div class="score-card"><div class="num figure">${ml.actual_stress_month_rate_pct}%</div><div class="label">ACTUAL OBSERVED STRESS-MONTH RATE</div></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--ink-soft);">The ML risk figure is the average, across this borrower's
+      observed months, of a model trained to predict "will this month be missed or partial?" from cash-flow
+      coverage, momentum, and repayment behavior - evaluated portfolio-wide with leave-one-borrower-out
+      cross-validation (see Methodology for the honest accuracy number).</p>
+    </section>
+
+    ${v ? `
+    <section>
+      <h2>How much to trust this layer</h2>
+      <div class="panel">
+        <p style="font-size:0.85rem;margin-top:0;">
+          <span class="badge-inline">Risk model CV accuracy: ${v.risk_model.cv_accuracy_pct}%</span>
+          <span class="badge-inline">Condition model CV accuracy: ${v.condition_model.cv_accuracy_pct}%</span>
+        </p>
+        <p style="font-size:0.82rem;color:var(--ink-soft);margin-bottom:0;">${v.condition_model.caveat}</p>
+      </div>
+    </section>` : ''}
+  `;
+}
+
+// ============================================================
 // METHODOLOGY PAGE
 // ============================================================
 function renderMethodologyPage() {
   const v = REPORT_DATA.validation;
+  const mlv = REPORT_DATA.ml_validation;
   const meta = REPORT_DATA.meta;
   const weights = REPORT_DATA.borrowers[0].scenarios.weights;
 
@@ -863,12 +958,13 @@ function renderMethodologyPage() {
         <span class="badge-inline">Forecast</span> →
         <span class="badge-inline">Scenario simulation</span> →
         <span class="badge-inline">Optimizer pick</span> →
-        <span class="badge-inline">Evidence &amp; warnings</span>
+        <span class="badge-inline">Evidence &amp; warnings</span> →
+        <span class="badge-inline">ML double-check</span>
       </p>
     </div>
 
     <div class="method-section">
-      <h3>Model validation</h3>
+      <h3>Model validation (rule-based engine)</h3>
       <div class="kpi-grid" style="margin-bottom:0;">
         <div class="kpi-card"><div class="num figure">${v.classifier_accuracy_pct}%</div><div class="label">CLASSIFIER ACCURACY (SYNTHETIC GROUND TRUTH)</div></div>
         <div class="kpi-card"><div class="num figure">${v.classifier_rows.length}</div><div class="label">BORROWERS EVALUATED</div></div>
@@ -879,6 +975,21 @@ function renderMethodologyPage() {
       data-generation time (never seen by the classifier itself). The forecast backtest holds out each
       borrower's last ${v.holdout_months} months, forecasts them blind, and compares against the real values.</p>
     </div>
+
+    ${mlv ? `
+    <div class="method-section">
+      <h3>ML double-check layer (ml_engine.py)</h3>
+      <div class="kpi-grid" style="margin-bottom:0;">
+        <div class="kpi-card"><div class="num figure">${mlv.risk_model.cv_accuracy_pct}%</div><div class="label">RISK MODEL CV ACCURACY (MONTH-LEVEL, LEAVE-ONE-BORROWER-OUT)</div></div>
+        <div class="kpi-card"><div class="num figure">${mlv.risk_model.n_rows}</div><div class="label">BORROWER-MONTHS TRAINED ON</div></div>
+        <div class="kpi-card"><div class="num figure">${mlv.condition_model.cv_accuracy_pct}%</div><div class="label">CONDITION MODEL CV ACCURACY (ON REAL BORROWERS)</div></div>
+      </div>
+      <p style="margin-top:14px;">This is a second, independently-trained ML layer that cross-checks the rule
+      engine above - it never overrides it, it flags disagreements for human review (see the "ML Double-Check"
+      tab on each borrower). The risk model's ${mlv.risk_model.cv_accuracy_pct}% is a real generalization
+      estimate: every scored prediction came from a borrower excluded from that fold's training data.</p>
+      <p style="font-size:0.82rem;color:var(--ink-soft);">${mlv.condition_model.caveat}</p>
+    </div>` : ''}
 
     <div class="method-section">
       <h3>Key parameters (configurable in code)</h3>
@@ -893,7 +1004,10 @@ function renderMethodologyPage() {
       <h3>Limitations</h3>
       <p>All figures are generated from a synthetic 24-month income/expense simulation for demonstration
       purposes. Confidence scores are prototype heuristics, not statistical p-values. Recommendations are
-      evidence-based and reviewable, but are meant to support - not replace - a human lender's judgment.</p>
+      evidence-based and reviewable, but are meant to support - not replace - a human lender's judgment.
+      The ML condition model in particular is trained on only 8 real borrowers augmented with synthetic
+      variants of those same 8 archetypes - it demonstrates the pipeline works, not a production-validated
+      classifier.</p>
     </div>
   `;
 }

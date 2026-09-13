@@ -1,0 +1,6 @@
+# Only needed for the ML double-check layer (ml_engine.py / ml_evaluate.py).
+# The rest of the project (data_generator.py, cashflow_engine.py,
+# risk_engine.py, repayment_engine.py, generate_report.py, evaluate.py) is
+# pure Python standard library, by design, and does not need this file.
+scikit-learn>=1.3
+numpy>=1.24

@@ -7,6 +7,8 @@ Runs the full pipeline for every synthetic borrower:
          -> financial health score -> repayment stress index
          -> scenario simulation (5 strategies) -> optimizer pick
          -> evidence chain -> early warnings -> "why not current plan"
+         -> [optional] ML double-check (ml_engine.py), if scikit-learn/numpy
+            are installed - see requirements.txt
 
 ...and writes a single JS file (dashboard/data.js) that the static
 dashboard loads directly via a <script> tag - no server, no build step.
@@ -32,6 +34,12 @@ from health_engine import (
 )
 import evaluate as evaluation_module
 
+try:
+    from ml_engine import double_check_report
+    _ML_AVAILABLE = True
+except ImportError:
+    _ML_AVAILABLE = False
+
 OUT_DIR = os.path.join(os.path.dirname(__file__), "dashboard")
 OUT_FILE = os.path.join(OUT_DIR, "data.js")
 
@@ -54,6 +62,21 @@ def _repayment_history_summary(history):
 def run(forecast_months=6):
     borrowers = get_borrowers()
     report = []
+
+    ml_by_id = {}
+    ml_validation = None
+    if _ML_AVAILABLE:
+        print("Training ML double-check layer (risk model + condition model)... "
+              "this takes ~30-40s due to leave-one-out cross-validation.")
+        try:
+            ml_report = double_check_report(borrowers)
+            ml_by_id = {row["id"]: row for row in ml_report["borrowers"]}
+            ml_validation = {
+                "risk_model": ml_report["risk_model_summary"],
+                "condition_model": ml_report["condition_model_summary"],
+            }
+        except Exception as e:  # noqa: BLE001 - never let the ML layer break the core report
+            print(f"WARNING: ML double-check layer failed ({e}); continuing without it.")
 
     for b in borrowers:
         analysis = analyze_borrower(b)
@@ -100,6 +123,7 @@ def run(forecast_months=6):
             "comparison_narrative": comparison_narrative,
             "repayment_history": b.get("repayment_history", []),
             "repayment_history_summary": repayment_summary,
+            "ml_check": ml_by_id.get(b["id"]),  # None if ML layer unavailable/failed
         })
 
     condition_counts = {}
@@ -144,6 +168,7 @@ def run(forecast_months=6):
             "forecast_months": forecast_months,
             "safety_buffer_pct": 10,
         },
+        "ml_validation": ml_validation,  # None if the ML layer wasn't available
     }
 
     with open(OUT_FILE, "w") as f:
@@ -154,6 +179,12 @@ def run(forecast_months=6):
 
     print(f"Wrote {OUT_FILE} with {len(report)} borrowers.")
     print(f"Classifier accuracy on synthetic ground truth: {validation['classifier']['accuracy_pct']}%")
+    if ml_validation:
+        print(f"ML risk model CV accuracy: {ml_validation['risk_model']['cv_accuracy_pct']}% "
+              f"| ML condition model CV accuracy: {ml_validation['condition_model']['cv_accuracy_pct']}%")
+    else:
+        print("ML double-check layer not included (scikit-learn/numpy unavailable or it failed) - "
+              "run `pip install -r requirements.txt` to enable it.")
     print("Open dashboard/index.html in a browser to view the prototype.")
 
 
